@@ -8,6 +8,10 @@
 
             "RoactFlexbox": {
                 "$path": "src"
+            },
+
+            "Roact": {
+                "$path": "modules/roact"
             }
         },
 

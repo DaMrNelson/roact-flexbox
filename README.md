@@ -14,7 +14,7 @@ TODO: Link to docs + give a short example
 
 ## TODO
 - [X] Get a POC flexbox implementation off the ground
-- [ ] Set up the repo with Rojo (was previously built into another project)
+- [X] Set up the repo with Rojo (was previously built into another project)
 - [ ] Support reverse (FlexDirection, FlexWrap)
 - [ ] Support self-align
 - [ ] Support self-start, self-end
@@ -26,6 +26,7 @@ TODO: Link to docs + give a short example
 - [ ] Expect unit tests with typechecking
 - [ ] Support MaxSize and MinSize properties
 - [ ] Clean up TODO list to only include features, not my own notes
+- [ ] Proper branch system
 - [ ] Investigate integration with Roblox LSP
 - [ ] Create as a model on Roblox
 - [ ] Post to DevForum

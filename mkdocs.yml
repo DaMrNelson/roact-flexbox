@@ -1,0 +1,33 @@
+# Heavily based on Roact's doc config which is under the Apache 2.0 license
+
+site_name: RoactFlexbox Documentation
+site_url: https://damrnelson.github.io/roact-flexbox/
+repo_name: DaMrNelson/roact-flexbox
+repo_url: https://github.com/DaMrNelson/roact-flexbox
+
+docs_dir: docs/
+
+theme:
+  name: material
+  palette:
+    primary: 'Light Blue'
+    accent: 'Light Blue'
+    scheme: preference
+
+nav:
+  - Home: index.md
+  - Installation: todo.md # TODO
+  - Intro to Flexbox: todo.md # TODO
+  - Roact Flexbox vs Web Flexbox: todo.md # TODO
+  - API Reference: todo.md # TODO
+
+extra_css:
+  - extra.css
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.superfences

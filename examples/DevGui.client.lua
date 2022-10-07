@@ -13,20 +13,21 @@ local root = Roact.createElement("ScreenGui", {
         Size = UDim2.new(0.8, 0, 0.8, 0),
         Position = UDim2.new(0.1, 0, 0.1, 0),
         --RowGap = UDim.new(0, 0),
-        RowGap = UDim.new(0, 100),
-        ColumnGap = UDim.new(0, 100),
+        RowGap = UDim.new(0, 25),
+        ColumnGap = UDim.new(0, 25),
         --JustifyContent = "flex-start",
         --JustifyContent = "flex-end",
         --JustifyContent = "center",
         --JustifyContent = "space-between",
         --JustifyContent = "space-around"
-        JustifyContent = "space-evenly",
+        JustifyContent = "center",
         --AlignContent = "space-evenly",
-        AlignContent = "flex-end",
-        AlignItems = "flex-end",
+        AlignContent = "stretch",
+        AlignItems = "stretch",
+        --AlignItems = "flex-start",
         FlexWrap = "wrap",
 
-        FlexDirection = "column",
+        FlexDirection = "row",
     }, {
         --[[TestElm1 = RoactFlexbox.createElement("Frame", {
             Order = 1,
@@ -75,13 +76,14 @@ local root = Roact.createElement("ScreenGui", {
         TestElm1 = RoactFlexbox.createElement("Frame", {
             Order = 1,
             FlexBasis = UDim.new(0.3, 0),
-            FlexAltBasis = UDim.new(0, 100),
+            FlexAltBasis = UDim.new(0, 200),
             BackgroundColor3 = Color3.new(1, 0, 0),
         }),
         TestElm2 = RoactFlexbox.createElement("Frame", {
             Order = 2,
             FlexBasis = UDim.new(0.3, 0),
             FlexAltBasis = UDim.new(0, 100),
+            AlignSelf = "center",
             BackgroundColor3 = Color3.new(0, 0, 1),
         }),
         TestElm3 = RoactFlexbox.createElement("Frame", {
@@ -91,13 +93,14 @@ local root = Roact.createElement("ScreenGui", {
             FlexAltBasis = UDim.new(0, 100),
             BackgroundColor3 = Color3.new(0, 1, 0),
         }),
-        TestElm4 = RoactFlexbox.createContainer("Frame", {
+        --TestElm4 = RoactFlexbox.createContainer("Frame", {
+        TestElm4 = RoactFlexbox.createElement("Frame", {
             Order = 4,
-            FlexBasis = UDim.new(0.3, 0),
+            FlexBasis = UDim.new(0.5, 0),
             FlexAltBasis = UDim.new(0, 100),
             BackgroundColor3 = Color3.new(1, 1, 0),
         }, {
-            TestElm1 = RoactFlexbox.createElement("Frame", {
+            --[[TestElm1 = RoactFlexbox.createElement("Frame", {
                 Order = 1,
                 FlexBasis = UDim.new(0.3, 0),
                 FlexAltBasis = UDim.new(0, 50),
@@ -116,7 +119,7 @@ local root = Roact.createElement("ScreenGui", {
                 --FlexAltBasis = UDim.new(0.8, 0),
                 FlexAltBasis = UDim.new(0, 90),
                 BackgroundColor3 = Color3.new(0, 1, 0),
-            }),
+            }),]]
         }),
     })
 })

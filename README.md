@@ -15,18 +15,22 @@ TODO: Link to docs + give a short example
 ## TODO
 - [X] Get a POC flexbox implementation off the ground
 - [X] Set up the repo with Rojo (was previously built into another project)
-- [ ] Support reverse (FlexDirection, FlexWrap)
-- [ ] Support self-align
-- [ ] Support self-start, self-end
+- [X] Proper branch system
+- [X] Support reverse (FlexDirection, FlexWrap)
+- [X] Support align-self
+- [ ] Support for shorthand properties: Flex, FlexFlow, and Gap
 - [ ] Update pixel math to fill to actual outer edge
+- [ ] Optimize when renders are performed (I placed a whole bunch to start for testing's sake)
 - [ ] Create documentation (github.io)
 - [ ] Pretty up the README (cool GitHub button things, short gif of the plugin in action, code example)
 - [ ] Unit tests (TextEz?)
 - [ ] Typechecking
-- [ ] Expect unit tests with typechecking
+- [ ] Update unit tests with typechecking
 - [ ] Support MaxSize and MinSize properties
 - [ ] Clean up TODO list to only include features, not my own notes
-- [ ] Proper branch system
 - [ ] Investigate integration with Roblox LSP
 - [ ] Create as a model on Roblox
 - [ ] Post to DevForum
+
+### Descoped
+- [ ] Support self-start, self-end, start, end, baseline, first baseline, etc

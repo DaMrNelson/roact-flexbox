@@ -78,6 +78,9 @@ return function(RoactFlexbox)
         -- Get axis
         local flexDirection = containerProps.FlexDirection
         local majorIsX = flexDirection == PROPERTIES.ROW or flexDirection == PROPERTIES.ROW_REVERSE
+        local majorIsReversed = table.find({ PROPERTIES.ROW_REVERSE, PROPERTIES.COLUMN_REVERSE }, flexDirection)
+        local minorIsReversed = containerProps.FlexWrap == PROPERTIES.WRAP_REVERSE
+
         local gapX = self:_scaleToPx(containerSize.X, containerProps.ColumnGap) -- Is always the gap between rows
         local gapY = self:_scaleToPx(containerSize.Y, containerProps.RowGap) -- Is always the gap between columns
         local majorSize, minorSize
@@ -171,9 +174,6 @@ return function(RoactFlexbox)
             end
         end
 
-        -- TODO: Update for _REVERSE (ie ROW vs ROW_REVERSE)
-        -- TODO: Consider align-self? This comment is randomly placed btw, I don't know where this should go
-
         -- Calculate columns
         if not primaryAxisOnly then
             -- Determine each line's largest basis (FlexAltBasis)
@@ -208,10 +208,10 @@ return function(RoactFlexbox)
             -- Create a vertical flexbox and fit the lines within it
             -- Doing this allows an even greater control of vertical positioning over the web's flexbox.
             -- TODO: I dig it, but would it be better to stick to the standard?
-            local linesFlexable = {}
+            local linesFlexible = {}
 
             for i, line in ipairs(lines) do
-                table.insert(linesFlexable, {
+                table.insert(linesFlexible, {
                     Instance = line,
                     Properties = {
                         Order = i,
@@ -241,20 +241,37 @@ return function(RoactFlexbox)
             }
 
             -- Position and size each line
-            local altStates = self:_flexDisplay(altContainerProps, containerSize, linesFlexable, true)
+            local altStates = self:_flexDisplay(altContainerProps, containerSize, linesFlexible, true)
 
             for _, flexLine in ipairs(altStates) do
+                --flexLine.Instance.PositionMajor = flexLine.PositionMajor -- Useful for debugging, but not necessary
+                --flexLine.Instance.SizeMajor = flexLine.SizeMajor
+
                 for _, item in ipairs(flexLine.Instance) do
-                    local posInLine, _ = self:_calculateFirstSpacing(containerProps.AlignItems, flexLine.SizeMajor - item.BasisPx, 1)
+                    local alignment = item.Properties.AlignSelf ~= PROPERTIES.UNDEFINED and item.Properties.AlignSelf or containerProps.AlignItems
 
-                    item.PositionMinor = flexLine.PositionMajor + posInLine
-
-                    if containerProps.AlignItems == PROPERTIES.STRETCH then
+                    if alignment == PROPERTIES.STRETCH then
                         item.SizeMinor = flexLine.SizeMajor
                     else
                         item.SizeMinor = item.BasisPx
                     end
+
+                    local posInLine, _ = self:_calculateFirstSpacing(alignment, flexLine.SizeMajor - item.SizeMinor, 1)
+                    item.PositionMinor = flexLine.PositionMajor + posInLine
                 end
+            end
+        end
+
+        -- Account for reversing
+        if majorIsReversed then
+            for _, state in ipairs(states) do
+                state.PositionMajor = majorSize - state.PositionMajor - state.SizeMajor
+            end
+        end
+
+        if minorIsReversed then
+            for _, state in ipairs(states) do
+                state.PositionMinor = minorSize - state.PositionMinor - state.SizeMinor
             end
         end
 

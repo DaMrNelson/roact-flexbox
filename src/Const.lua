@@ -34,7 +34,6 @@ local FLEX_ITEM_PROPS = {
     "FlexBasis", -- UDim or PROPERTIES.AUTO
     --"Flex", -- TODO: This? (Combines FlexGrow, FlexShrink, and FlexBasis)
     "AlignSelf", -- auto | flex-start | flex-end | center | stretch
-                 -- TODO: Also support: baseline
 
     "FlexAltBasis", -- UDim or PROPERTIES.AUTO. TODO: when is this used and ignored??
 
@@ -49,9 +48,7 @@ local FLEX_CONTAINER_PROPS = {
     -- "FlexFlow", -- TODO: This? (Combines FlexDirection and FlexWrap)
     "JustifyContent", -- flex-start | flex-end | center | space-between | space-around | space-evenly
     "AlignItems", -- stretch | flex-start | flex-end | center (also space-around | space-between, but those do nothing different from center on AlignItems which only applies to single lines)
-                  -- TODO: Also support: baseline | first baseline | last baseline | start | end | self-start | self-end
     "AlignContent", -- flex-start | flex-end | center | space-between | space-around | space-evenly | stretch
-                    -- TODO: Also support: start | end | baseline | first baseline | last baseline
     --"Gap", -- TODO: This? (Combines RowGap and ColumnGap)
     "RowGap", -- UDim
     "ColumnGap", -- UDim

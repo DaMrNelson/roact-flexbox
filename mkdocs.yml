@@ -1,6 +1,6 @@
 # Heavily based on Roact's doc config which is under the Apache 2.0 license
 
-site_name: RoactFlexbox Documentation
+site_name: RoactFlexbox
 site_url: https://damrnelson.github.io/roact-flexbox/
 repo_name: DaMrNelson/roact-flexbox
 repo_url: https://github.com/DaMrNelson/roact-flexbox

@@ -1,0 +1,33 @@
+{
+    "name": "RoactFlexbox Test Place",
+    "tree": {
+        "$className": "DataModel",
+
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+
+            "RoactFlexbox": {
+                "$path": "src"
+            }
+        },
+
+        "StarterPlayer": {
+            "$className": "StarterPlayer",
+
+            "StarterPlayerScripts": {
+                "$className": "StarterPlayerScripts",
+
+                "RoactFlexboxExamples": {
+                    "$path": "examples"
+                }
+            }
+        },
+
+        "Players": {
+            "$className": "Players",
+            "$properties": {
+                "CharacterAutoLoads": false
+            }
+        }
+    }
+}

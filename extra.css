@@ -1,0 +1,9 @@
+/** Copied from Roact's doc config which is under the Apache 2.0 license */
+
+.md-typeset hr {
+	border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+.md-header__topic:first-child {
+    font-weight: unset;
+}

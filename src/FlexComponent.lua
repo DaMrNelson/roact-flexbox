@@ -4,17 +4,22 @@ local PROPERTIES = Const.PUBLIC.PROPERTIES
 
 return function(RoactFlexbox)
     local Roact = RoactFlexbox.Roact
-    local FlexContainer = Roact.Component:extend("FlexContainer")
 
-    function FlexContainer:init()
-        self.ref = self.props._FlexboxForwardRef
+    local FlexComponent = Roact.Component:extend("FlexComponent")
+
+    function FlexComponent:init()
+        self.ref = Roact.createRef() -- TODO: Rename to _ref or __ref
     end
 
-    function FlexContainer:render()
+    function FlexComponent:render()
         local renderedProps = table.clone(self.props) -- Shallow copy
 
-        -- Remove FlexContainer properties
+        -- Remove FlexContainer and FlexItem properties
+        -- TODO: Merge into one list with the container rework!
         for _, propName in ipairs(Const.PRIVATE.FLEX_CONTAINER_PROPS) do
+            renderedProps[propName] = nil
+        end
+        for _, propName in ipairs(Const.PRIVATE.FLEX_ITEM_PROPS) do
             renderedProps[propName] = nil
         end
 
@@ -34,7 +39,7 @@ return function(RoactFlexbox)
             --
             -- Anyways, this fixes an issue where statically sized containers do layout correctly.
             -- This is because AbsoluteSize is called as this component is initialized by Roact, which
-            -- is BEFORE the FlexItem that wrap's this has didMount invoked. As such this object's
+            -- is BEFORE the FlexComponent that wrap's this has didMount invoked. As such this object's
             -- frame has no properties set yet!
             --
             -- TODO: Alternatively, consider just using self.props. This is so overkill.
@@ -52,8 +57,8 @@ return function(RoactFlexbox)
         -- Forward ref
         renderedProps[Roact.Ref] = self.ref
 
-        -- Render our component! (We should already be wrapped by FlexItem)
-        return Roact.createElement(
+        -- Render our component!
+        return Roact.createElement( -- TODO: Or RoactFlexbox.createElement for non-host elements? Maybe???
             self.props._FlexboxComponentName,
             renderedProps
         )
@@ -63,21 +68,71 @@ return function(RoactFlexbox)
     -- Right now I'm kind of just throwing updates everywhere until I get the core functionality down.
     -- Ie will children update themselves? Is there a cleaner way to make them update?
 
-    function FlexContainer:didMount()
+    function FlexComponent:didMount()
+        self:applyAttributes()
+
         -- SEE ALSO: CTRL+F "Defer container update"
         task.defer(function()
             self:containerUpdate()
         end)
     end
 
-    function FlexContainer:didUpdate()
+    function FlexComponent:didUpdate()
+        self:applyAttributes()
+
         -- SEE ALSO: CTRL+F "Defer container update"
         task.defer(function()
             self:containerUpdate()
         end)
     end
 
-    function FlexContainer:containerUpdate()
+    -- Applies all flexbox-related attributes to this object's instance.
+    function FlexComponent:applyAttributes()
+        local elm = self.ref:getValue()
+
+        -- Enforce special FlexDisabled default = false for FlexComponents.
+        -- That way when we encounter a real instance with this unset we can assume that we shouldn't adjust it.
+        elm:SetAttribute(Util.applyNamespace("FlexDisabled"), false) -- Will be overwritten below if set
+
+        -- Expand shorthand properties
+        -- Explicitly defined props always overwrite shorthand props
+        for key, mappedProps in pairs(Const.PRIVATE.FLEX_PROPS_SHORTHAND) do
+            local vals = self.props[key]
+
+            if vals ~= nil then
+                -- Hardcoded exception: Gap can be UDim2
+                if key == "Gap" and typeof(vals) == "UDim2" then
+                    vals = { vals.X, vals.Y }
+                end
+
+                -- All other props work the same (Gap uses this too)
+                for i = 1, math.min(#vals, #mappedProps) do
+                    elm:SetAttribute(Util.applyNamespace(mappedProps[i]), vals[i])
+                end
+            end
+        end
+
+        -- Apply other props overtop of shorthand properties
+        for key, val in pairs(self.props) do
+            -- Prop must be in (FLEX_ITEM_PROPS or FLEX_CONTAINER_PROPS) and NOT in FLEX_PROPS_NOATTRIBUTE
+            if (table.find(Const.PRIVATE.FLEX_ITEM_PROPS, key) == nil and table.find(Const.PRIVATE.FLEX_CONTAINER_PROPS, key) == nil) or table.find(Const.PRIVATE.FLEX_PROPS_NOATTRIBUTE, key) ~= nil then
+                continue
+            end
+
+            -- Cannot save shorthand props (so they were derived first)
+            if Const.PRIVATE.FLEX_PROPS_SHORTHAND[key] ~= nil then
+                continue
+            end
+
+            -- Prop is safe to add
+            elm:SetAttribute(Util.applyNamespace(key), val)
+        end
+
+        -- Derived attributes
+        elm:SetAttribute(Util.applyNamespace("PropSize"), self.props.Size) -- Original component size (used for basis = "auto")
+    end
+
+    function FlexComponent:containerUpdate()
         local selfObj = self.ref:getValue()
         local children = selfObj:GetChildren()
 
@@ -98,7 +153,7 @@ return function(RoactFlexbox)
         end
     end
 
-    function FlexContainer:_flexDisplay(containerProps, containerSize, items, primaryAxisOnly)
+    function FlexComponent:_flexDisplay(containerProps, containerSize, items, primaryAxisOnly)
         --[[ -- THIS REQUIRES:
             containerProps: TODO: just search manually
             items[i]: TODO: just search manually
@@ -378,7 +433,7 @@ return function(RoactFlexbox)
         return states
     end
 
-    function FlexContainer:_calculateFirstSpacing(justifyContent, remainingSpace, numLines)
+    function FlexComponent:_calculateFirstSpacing(justifyContent, remainingSpace, numLines)
         local posMajor, justifyGapMajor = 0, 0
 
         if justifyContent == PROPERTIES.FLEX_END then
@@ -399,7 +454,7 @@ return function(RoactFlexbox)
         return posMajor, justifyGapMajor
     end
 
-    function FlexContainer:_calculateLineSize(line, gap)
+    function FlexComponent:_calculateLineSize(line, gap)
         local totalElmSize = 0
 
         for _, line in ipairs(line) do
@@ -410,7 +465,7 @@ return function(RoactFlexbox)
         return totalElmSize
     end
 
-    function FlexContainer:_applyWeightedAdjustment(remainingSpace, weightedProp, setProp, states)
+    function FlexComponent:_applyWeightedAdjustment(remainingSpace, weightedProp, setProp, states)
         -- Calculate weights for growing
         local weightSum = 0
 
@@ -433,5 +488,6 @@ return function(RoactFlexbox)
         end
     end
 
-    return FlexContainer
+    return FlexComponent
+
 end

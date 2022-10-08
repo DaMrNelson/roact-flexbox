@@ -24,7 +24,8 @@ local PROPERTIES = {
     --NONE = "none",
 }
 local ATTRIBUTE_NAMESPACE = "RoactFlexbox" -- Namespace applied to any attribute this script sets
-local USE_ATTRIBUTE_NAMESPACE = true -- Toggle for attribute namespace for those who are annoyed by it
+local USE_ATTRIBUTE_NAMESPACE = false -- Toggle for attribute namespace for those who are annoyed by it
+                                      -- TODO: Re-enable?
 
 local FLEX_ITEM_PROPS = {
     "_FlexboxComponentName",

@@ -8,8 +8,6 @@ game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
 --task.wait(1.5)
 
 -- Create test GUI
-local guiChoice = 1
-
 local root = Roact.createElement("ScreenGui", {
     ResetOnSpawn = false,
 }, {
@@ -40,6 +38,9 @@ local root = Roact.createElement("ScreenGui", {
         Gap = { UDim.new(0, 10), UDim.new(0, 50) },
         --RowGap = UDim.new(0, 50),
         --ColumnGap = UDim.new(0, 100),
+
+        BorderSizePixel = 10,
+        BorderMode = Enum.BorderMode.Inset,
     }, {
         --[[TestElm1 = RoactFlexbox.createElement("Frame", {
             Order = 1,
@@ -93,6 +94,7 @@ local root = Roact.createElement("ScreenGui", {
             --FlexAltBasis = UDim.new(0, 200),
             BackgroundColor3 = Color3.new(1, 0, 0),
             BorderSizePixel = 0,
+            --FlexGrow = 1,
         }, {
             TextLabel = Roact.createElement("TextLabel", {
                 AutomaticSize = Enum.AutomaticSize.XY,
@@ -126,7 +128,7 @@ local root = Roact.createElement("ScreenGui", {
             Order = 3.1,
             FlexBasis = UDim.new(0.41, 3),
             --FlexAltBasis = UDim.new(0.8, 0),
-            FlexAltBasis = UDim.new(0, 100),
+            FlexAltBasis = UDim.new(0, 50),
             FlexGrow = 1,
             BackgroundColor3 = Color3.new(0, 1, 0),
             BorderSizePixel = 0,
@@ -148,7 +150,7 @@ local root = Roact.createElement("ScreenGui", {
         TestElm4 = RoactFlexbox.createElement("Frame", {
             Order = 4,
             FlexBasis = UDim.new(0.5, 0),
-            FlexAltBasis = UDim.new(0, 100),
+            FlexAltBasis = UDim.new(0, 10),
             BackgroundColor3 = Color3.new(1, 1, 0),
             BorderSizePixel = 0,
         }, {

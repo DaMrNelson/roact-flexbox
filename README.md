@@ -26,7 +26,11 @@ TODO: Link to docs + give a short example
 - [X] Support for AutomaticSize
 - [X] Respect SizeConstraint for basis = "auto"
 - [X] Fix static sized render issue
-- [ ] Investigate whether or not changes are needed based on BorderMode
+- [X] Investigate whether or not changes are needed based on BorderMode
+- [X] Apply changes for BorderMode
+- [X] Make AlignItems overwrite AlignContent on single-line mode
+- [ ] Simplify into a single FlexComponent and allow complex extending similar to Roact.Component:extend
+- [ ] Apply to a realistic test case
 - [ ] Create documentation (github.io)
 - [ ] Pretty up the README (cool GitHub button things, short gif of the plugin in action, code example)
 - [ ] Unit tests (TextEz?)

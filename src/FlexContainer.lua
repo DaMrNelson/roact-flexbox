@@ -4,7 +4,6 @@ local PROPERTIES = Const.PUBLIC.PROPERTIES
 
 return function(RoactFlexbox)
     local Roact = RoactFlexbox.Roact
-    local FlexItem = RoactFlexbox._FlexItem
     local FlexContainer = Roact.Component:extend("FlexContainer")
 
     function FlexContainer:init()
@@ -86,14 +85,15 @@ return function(RoactFlexbox)
             return
         end
 
+        local inset = Util.getBorderInset(selfObj)
         local states = self:_flexDisplay(
             Util.getProps(selfObj, Const.PRIVATE.FLEX_CONTAINER_PROPS),
-            selfObj.AbsoluteSize,
+            selfObj.AbsoluteSize - Vector2.new(inset * 2, inset * 2),
             Util.getChildrenAndProps(children, Const.PRIVATE.FLEX_ITEM_PROPS)
         )
 
         for _, state in ipairs(states) do
-            state.Instance.Position = UDim2.new(0, state.X, 0, state.Y)
+            state.Instance.Position = UDim2.new(0, state.X, 0, state.Y) -- Border inset changes origin position so no need to apply it here
             state.Instance.Size = UDim2.new(0, state.Width, 0, state.Height)
         end
     end
@@ -234,7 +234,7 @@ return function(RoactFlexbox)
             end
         end
 
-        -- Calculate columns
+        -- Calculate each item's alternate basis and column sizes
         if not primaryAxisOnly then
             -- Determine each line's largest basis (FlexAltBasis)
             -- Then store it in line.MaxMinor
@@ -269,45 +269,59 @@ return function(RoactFlexbox)
                 line.MaxMinor = largestBasisPx
             end
 
-            -- Create a vertical flexbox and fit the lines within it
-            -- Doing this allows an even greater control of vertical positioning over the web's flexbox.
-            -- TODO: I dig it, but would it be better to stick to the standard?
-            local linesFlexible = {}
+            -- Size lines based on number of lines
+            -- One line: treat AlignContent as "stretch", respect AlignItems
+            -- Multiple lines: respect AlignContent, respect AlignItems
+            local altStates
 
-            for i, line in ipairs(lines) do
-                table.insert(linesFlexible, {
-                    Instance = line,
-                    -- No need to set AbsoluteSize because Properties.FlexBasis is set
-                    Properties = {
-                        Order = i,
-                        FlexGrow = containerProps.AlignContent == PROPERTIES.STRETCH and 1 or 0,
-                        FlexShrink = 0,
-                        FlexBasis = UDim.new(0, line.MaxMinor),
-                    }
-                })
+            if #lines == 1 then
+                altStates = {{
+                    Instance = lines[1],
+                    SizeMajor = minorSize,
+                    PositionMajor = 0,
+                }}
+            else
+                -- Create a vertical flexbox and fit the lines within it
+                -- Doing this allows an even greater control of vertical positioning over the web's flexbox.
+                -- TODO: I dig it, but would it be better to stick to the standard?
+                local linesFlexible = {}
+
+                for i, line in ipairs(lines) do
+                    table.insert(linesFlexible, {
+                        Instance = line,
+                        -- No need to set AbsoluteSize because Properties.FlexBasis is set
+                        Properties = {
+                            Order = i,
+                            FlexGrow = containerProps.AlignContent == PROPERTIES.STRETCH and 1 or 0,
+                            FlexShrink = 0,
+                            FlexBasis = UDim.new(0, line.MaxMinor),
+                        }
+                    })
+                end
+
+                -- Opposite of current FlexDirection
+                local flexDirection
+
+                if containerProps.FlexDirection == PROPERTIES.ROW or containerProps.FlexDirection == PROPERTIES.ROW_REVERSE then
+                    flexDirection = PROPERTIES.COLUMN -- TODO: Can this ever be COLUMN_REVERSE?
+                else -- COLUMN, COLUMN_REVERSE
+                    flexDirection = PROPERTIES.ROW -- TODO: Can this ever be ROW_REVERSE?
+                end
+
+                -- Finish alt container properties
+                local altContainerProps = {
+                    FlexDirection = flexDirection,
+                    JustifyContent = containerProps.AlignContent,
+                    RowGap = containerProps.RowGap,
+                    ColumnGap = containerProps.ColumnGap,
+                    FlexWrap = PROPERTIES.NOWRAP,
+                }
+
+                -- Position and size each line
+                altStates = self:_flexDisplay(altContainerProps, containerSize, linesFlexible, true)
             end
 
-            -- Opposite of current FlexDirection
-            local flexDirection
-
-            if containerProps.FlexDirection == PROPERTIES.ROW or containerProps.FlexDirection == PROPERTIES.ROW_REVERSE then
-                flexDirection = PROPERTIES.COLUMN -- TODO: Can this ever be COLUMN_REVERSE?
-            else -- COLUMN, COLUMN_REVERSE
-                flexDirection = PROPERTIES.ROW -- TODO: Can this ever be ROW_REVERSE?
-            end
-
-            -- Finish alt container properties
-            local altContainerProps = {
-                FlexDirection = flexDirection,
-                JustifyContent = containerProps.AlignContent,
-                RowGap = containerProps.RowGap,
-                ColumnGap = containerProps.ColumnGap,
-                FlexWrap = PROPERTIES.NOWRAP,
-            }
-
-            -- Position and size each line
-            local altStates = self:_flexDisplay(altContainerProps, containerSize, linesFlexible, true)
-
+            -- Apply line sizing
             for _, flexLine in ipairs(altStates) do
                 --flexLine.Instance.PositionMajor = flexLine.PositionMajor -- Useful for debugging, but not necessary
                 --flexLine.Instance.SizeMajor = flexLine.SizeMajor

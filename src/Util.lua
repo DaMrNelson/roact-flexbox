@@ -53,4 +53,18 @@ function Util.scaleToPx(total, udim)
     return udim.Scale * total + udim.Offset
 end
 
+-- Gets the border inset for a given GUI based on BorderSizePixel and BorderMode.
+-- Returns the amount amount of inset from any corner in pixels: number
+function Util.getBorderInset(inst)
+    local borderSize = inst.BorderSizePixel
+
+    if borderSize == 0 or inst.BorderMode == Enum.BorderMode.Outline then
+        return 0
+    elseif inst.BorderMode == Enum.BorderMode.Middle then
+        return borderSize / 2
+    elseif inst.BorderMode == Enum.BorderMode.Inset then
+        return borderSize
+    end
+end
+
 return Util

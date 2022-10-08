@@ -56,6 +56,22 @@ return function(RoactFlexbox)
         self:containerUpdate()
     end
 
+    function FlexContainer:containerUpdate()
+        local selfObj = self.ref:getValue()
+        local children = selfObj:GetChildren()
+
+        if not #children then -- TODO: Is there ever anything we need to do even if we have no children?
+            return
+        end
+
+        local states = self:_flexDisplay(self:_getProps(selfObj, Const.PRIVATE.FLEX_CONTAINER_PROPS), selfObj.AbsoluteSize, self:_getChildrenAndProps(children, Const.PRIVATE.FLEX_ITEM_PROPS))
+
+        for _, state in ipairs(states) do
+            state.Instance.Position = UDim2.new(0, state.X, 0, state.Y)
+            state.Instance.Size = UDim2.new(0, state.Width, 0, state.Height)
+        end
+    end
+
     function FlexContainer:_flexDisplay(containerProps, containerSize, items, primaryAxisOnly)
         --[[ -- THIS REQUIRES:
             containerProps: TODO: just search manually
@@ -70,6 +86,7 @@ return function(RoactFlexbox)
         -- state: { [index varies after sorting] = { Instance = [items[].Instance], Position = Vector2(X, Y), Size = Vector2(X, Y) }, ... }
         -- TODO: Props as dict or something probably
 
+        containerSize = Vector2.new(math.round(containerSize.X), math.round(containerSize.Y)) -- Unlike UDim2.new, AbsoluteSize gets rounded
         local states = {}
 
         -- Sort items by Order
@@ -262,6 +279,19 @@ return function(RoactFlexbox)
             end
         end
 
+        -- Fix decimal inaccuracy due to mismatch between integer pixels and float flex "pixels"
+        -- TODO: Is this right? This seemed way too easy.
+        for _, line in ipairs(lines) do
+            for _, state in ipairs(line) do
+                --[[state.PositionMajor = math.round(state.PositionMajor)
+                state.SizeMajor = math.round(state.SizeMajor)]]
+                local startPos = state.PositionMajor
+                local endPos = state.PositionMajor + state.SizeMajor
+                state.PositionMajor = math.round(startPos)
+                state.SizeMajor = math.round(endPos) - math.round(startPos)
+            end
+        end
+
         -- Account for reversing
         if majorIsReversed then
             for _, state in ipairs(states) do
@@ -316,22 +346,6 @@ return function(RoactFlexbox)
 
         totalElmSize += gap * (#line - 1)
         return totalElmSize
-    end
-
-    function FlexContainer:containerUpdate()
-        local selfObj = self.ref:getValue()
-        local children = selfObj:GetChildren()
-
-        if not #children then -- TODO: Is there ever anything we need to do even if we have no children?
-            return
-        end
-
-        local states = self:_flexDisplay(self:_getProps(selfObj, Const.PRIVATE.FLEX_CONTAINER_PROPS), selfObj.AbsoluteSize, self:_getChildrenAndProps(children, Const.PRIVATE.FLEX_ITEM_PROPS))
-
-        for _, state in ipairs(states) do
-            state.Instance.Position = UDim2.new(0, state.X, 0, state.Y)
-            state.Instance.Size = UDim2.new(0, state.Width, 0, state.Height)
-        end
     end
 
     function FlexContainer:_getProps(obj, propList)

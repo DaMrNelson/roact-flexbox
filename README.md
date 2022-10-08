@@ -19,7 +19,7 @@ TODO: Link to docs + give a short example
 - [X] Support reverse (FlexDirection, FlexWrap)
 - [X] Support align-self
 - [ ] Support for shorthand properties: Flex, FlexFlow, and Gap
-- [ ] Update pixel math to fill to actual outer edge
+- [X] Update pixel math to fill to actual outer edge
 - [ ] Optimize when renders are performed (I placed a whole bunch to start for testing's sake)
 - [ ] Create documentation (github.io)
 - [ ] Pretty up the README (cool GitHub button things, short gif of the plugin in action, code example)

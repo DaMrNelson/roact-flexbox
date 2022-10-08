@@ -89,7 +89,16 @@ return function(RoactFlexbox)
         containerSize = Vector2.new(math.round(containerSize.X), math.round(containerSize.Y)) -- Unlike UDim2.new, AbsoluteSize gets rounded
         local states = {}
 
-        -- Sort items by Order
+        -- Filter out non-flex items and sort by Order
+        local filteredItems = {}
+
+        for _, item in ipairs(items) do
+            if not item.Properties.FlexDisabled then
+                table.insert(filteredItems, item)
+            end
+        end
+
+        items = filteredItems
         table.sort(items, function(item1, item2) return item1.Properties.Order < item2.Properties.Order end)
 
         -- Get axis

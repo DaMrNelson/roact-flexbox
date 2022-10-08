@@ -18,9 +18,14 @@ TODO: Link to docs + give a short example
 - [X] Proper branch system
 - [X] Support reverse (FlexDirection, FlexWrap)
 - [X] Support align-self
-- [ ] Support for shorthand properties: Flex, FlexFlow, and Gap
+- [X] Support for shorthand properties: Flex, FlexFlow, and Gap
 - [X] Update pixel math to fill to actual outer edge
+- [X] Allow for non-flex children within the flexbox
 - [ ] Optimize when renders are performed (I placed a whole bunch to start for testing's sake)
+- [X] Scope attributes to "RoactFlexbox" namespace (ie RoactFlexbox.IsFlexItem)
+- [ ] Support for AutomaticSize
+- [ ] Support for SizeConstraint (_scaleToPx)
+- [ ] Investigate whether or not changes are needed based on BorderMode
 - [ ] Create documentation (github.io)
 - [ ] Pretty up the README (cool GitHub button things, short gif of the plugin in action, code example)
 - [ ] Unit tests (TextEz?)

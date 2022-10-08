@@ -24,9 +24,15 @@ local root = Roact.createElement("ScreenGui", {
         AlignContent = "stretch",
         AlignItems = "stretch",
         --AlignItems = "flex-start",
+
+        FlexFlow = { "row", "nowrap" },
+        --FlexDirection = "row",
         FlexWrap = "wrap",
 
-        FlexDirection = "row",
+        --Gap = UDim2.new(0, 10, 0, 50),
+        Gap = { UDim.new(0, 10), UDim.new(0, 50) },
+        --RowGap = UDim.new(0, 50),
+        --ColumnGap = UDim.new(0, 100),
     }, {
         --[[TestElm1 = RoactFlexbox.createElement("Frame", {
             Order = 1,
@@ -74,14 +80,14 @@ local root = Roact.createElement("ScreenGui", {
         }),]]
         TestElm1 = RoactFlexbox.createElement("Frame", {
             Order = 1,
-            FlexBasis = UDim.new(0.3, 0),
+            FlexBasis = UDim.new(0.2, 0),
             FlexAltBasis = UDim.new(0, 200),
             BackgroundColor3 = Color3.new(1, 0, 0),
             BorderSizePixel = 0,
         }),
         TestElm2 = RoactFlexbox.createElement("Frame", {
             Order = 2,
-            FlexBasis = UDim.new(0.3, 0),
+            FlexBasis = UDim.new(0.2, 0),
             FlexAltBasis = UDim.new(0, 100),
             AlignSelf = "center",
             BackgroundColor3 = Color3.new(0, 0, 1),
@@ -89,21 +95,35 @@ local root = Roact.createElement("ScreenGui", {
         }),
         TestElm3 = RoactFlexbox.createElement("Frame", {
             Order = 3,
-            FlexBasis = UDim.new(0.3, 0),
+            FlexBasis = UDim.new(0.2, 0),
+            --FlexAltBasis = UDim.new(0.8, 0),
+            FlexAltBasis = UDim.new(0, 100),
+            --FlexGrow = 1,
+            --Flex = { 1, 0, UDim.new(0.9, 0) },
+            BackgroundColor3 = Color3.new(0, 1, 0),
+            BorderSizePixel = 0,
+        }),
+        TestElm3_1 = RoactFlexbox.createElement("Frame", {
+            Order = 3.1,
+            FlexBasis = UDim.new(0.41, 3),
             --FlexAltBasis = UDim.new(0.8, 0),
             FlexAltBasis = UDim.new(0, 100),
             FlexGrow = 1,
             BackgroundColor3 = Color3.new(0, 1, 0),
             BorderSizePixel = 0,
         }),
-        TestElm3_1 = RoactFlexbox.createElement("Frame", {
-            Order = 3.1,
-            FlexBasis = UDim.new(0.3, 3),
-            --FlexAltBasis = UDim.new(0.8, 0),
-            FlexAltBasis = UDim.new(0, 100),
-            FlexGrow = 1,
-            BackgroundColor3 = Color3.new(0, 1, 0),
-            BorderSizePixel = 0,
+        RandomElm = Roact.createElement("Frame", { -- Random non-flex element
+            BackgroundColor3 = Color3.new(0, 0, 0),
+            Size = UDim2.new(0.25, 0, 0.5, 0),
+            Position = UDim2.new(0.25, 0, 0.25, 0),
+            Transparency = 0.5,
+        }),
+        DisabledElm = RoactFlexbox.createElement("Frame", {
+            FlexDisabled = true,
+            BackgroundColor3 = Color3.new(1, 1, 1),
+            Size = UDim2.new(0.25, 0, 0.5, 0),
+            Position = UDim2.new(0.5, 0, 0.25, 0),
+            Transparency = 0.5,
         }),
         --TestElm4 = RoactFlexbox.createContainer("Frame", {
         TestElm4 = RoactFlexbox.createElement("Frame", {

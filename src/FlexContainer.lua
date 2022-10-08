@@ -1,4 +1,5 @@
 local Const = require(script.Parent.Const)
+local Util = require(script.Parent.Util)
 local PROPERTIES = Const.PUBLIC.PROPERTIES
 
 return function(RoactFlexbox)
@@ -86,9 +87,9 @@ return function(RoactFlexbox)
         end
 
         local states = self:_flexDisplay(
-            self:_getProps(selfObj, Const.PRIVATE.FLEX_CONTAINER_PROPS),
+            Util.getProps(selfObj, Const.PRIVATE.FLEX_CONTAINER_PROPS),
             selfObj.AbsoluteSize,
-            self:_getChildrenAndProps(children, Const.PRIVATE.FLEX_ITEM_PROPS)
+            Util.getChildrenAndProps(children, Const.PRIVATE.FLEX_ITEM_PROPS)
         )
 
         for _, state in ipairs(states) do
@@ -132,8 +133,9 @@ return function(RoactFlexbox)
         local majorIsReversed = table.find({ PROPERTIES.ROW_REVERSE, PROPERTIES.COLUMN_REVERSE }, flexDirection)
         local minorIsReversed = containerProps.FlexWrap == PROPERTIES.WRAP_REVERSE
 
-        local gapX = self:_scaleToPx(containerSize.X, containerProps.ColumnGap) -- Is always the gap between rows
-        local gapY = self:_scaleToPx(containerSize.Y, containerProps.RowGap) -- Is always the gap between columns
+        local gapX = Util.scaleToPx(containerSize.X, containerProps.ColumnGap) -- Is always the gap between rows.
+        local gapY = Util.scaleToPx(containerSize.Y, containerProps.RowGap) -- Is always the gap between columns.
+                                                                            -- TODO: Make gap respect SizeConstraint?
         local majorSize, minorSize
         local gapMajor, gapMinor
 
@@ -174,7 +176,7 @@ return function(RoactFlexbox)
                 end
             end
 
-            local basisPx = self:_scaleToPx(majorSize, basis)
+            local basisPx = Util.scaleToPx(majorSize, basis)
             local state = {
                 SizeMajor = basisPx,
                 Instance = item.Instance,
@@ -255,7 +257,7 @@ return function(RoactFlexbox)
                         end
                     end
 
-                    local basisPx = self:_scaleToPx(minorSize, basis)
+                    local basisPx = Util.scaleToPx(minorSize, basis)
 
                     if basisPx > largestBasisPx then
                         largestBasisPx = basisPx
@@ -394,26 +396,6 @@ return function(RoactFlexbox)
         return totalElmSize
     end
 
-    function FlexContainer:_getProps(obj, propList)
-        local props = {}
-
-        for _, prop in ipairs(propList) do
-            props[prop] = FlexItem:_getAttribute(obj, prop)
-        end
-
-        return props
-    end
-
-    function FlexContainer:_getChildrenAndProps(children, propList)
-        local props = {}
-
-        for _, child in ipairs(children) do
-            table.insert(props, { Instance = child, Properties = self:_getProps(child, propList) })
-        end
-
-        return props
-    end
-
     function FlexContainer:_applyWeightedAdjustment(remainingSpace, weightedProp, setProp, states)
         -- Calculate weights for growing
         local weightSum = 0
@@ -435,10 +417,6 @@ return function(RoactFlexbox)
         else
             return remainingSpace -- We've done nothing
         end
-    end
-
-    function FlexContainer:_scaleToPx(total, udim)
-        return udim.Scale * total + udim.Offset
     end
 
     return FlexContainer

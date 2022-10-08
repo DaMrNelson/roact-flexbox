@@ -1,4 +1,5 @@
 local Const = require(script.Parent.Const)
+local Util = require(script.Parent.Util)
 
 return function(RoactFlexbox)
     local Roact = RoactFlexbox.Roact
@@ -44,12 +45,13 @@ return function(RoactFlexbox)
         self:applyAttributes()
     end
 
+    -- Applies all flexbox-related attributes to this object's instance.
     function FlexItem:applyAttributes()
         local elm = self.ref:getValue()
 
         -- Enforce special FlexDisabled default = false for FlexItems.
         -- That way when we encounter a real instance with this unset we can assume that we shouldn't adjust it.
-        elm:SetAttribute(self:_applyNamespace("FlexDisabled"), false) -- Will be overwritten below if set
+        elm:SetAttribute(Util.applyNamespace("FlexDisabled"), false) -- Will be overwritten below if set
 
         -- Expand shorthand properties
         -- Explicitly defined props always overwrite shorthand props
@@ -64,7 +66,7 @@ return function(RoactFlexbox)
 
                 -- All other props work the same (Gap uses this too)
                 for i = 1, math.min(#vals, #mappedProps) do
-                    elm:SetAttribute(self:_applyNamespace(mappedProps[i]), vals[i])
+                    elm:SetAttribute(Util.applyNamespace(mappedProps[i]), vals[i])
                 end
             end
         end
@@ -82,31 +84,11 @@ return function(RoactFlexbox)
             end
 
             -- Prop is safe to add
-            elm:SetAttribute(self:_applyNamespace(key), val)
+            elm:SetAttribute(Util.applyNamespace(key), val)
         end
 
         -- Derived attributes
-        elm:SetAttribute(self:_applyNamespace("PropSize"), self.props.Size) -- Original component size (used for basis = "auto")
-    end
-
-    -- Gets the given attribute, or returns the default from Const.PRIVATE.DEFAULTS if unset/nil.
-    function FlexItem:_getAttribute(item, prop)
-        local val = item:GetAttribute(FlexItem:_applyNamespace(prop))
-
-        if val == nil then
-            return Const.PRIVATE.DEFAULTS[prop]
-        else
-            return val
-        end
-    end
-
-    -- Applies our namespace to the given attribute name
-    function FlexItem:_applyNamespace(name)
-        if Const.PUBLIC.USE_ATTRIBUTE_NAMESPACE then
-            return Const.PUBLIC.ATTRIBUTE_NAMESPACE .. "_" .. name
-        else
-            return name
-        end
+        elm:SetAttribute(Util.applyNamespace("PropSize"), self.props.Size) -- Original component size (used for basis = "auto")
     end
 
     return FlexItem

@@ -41,7 +41,7 @@ TODO: Link to docs + give a short example
 ### RC2
 - [ ] Support for SizeConstraint for internal properties like FlexBasis (_scaleToPx)
     - Not a priority for RC1. Can be in RC2.
-- [ ] Investigate moving from Attributes to Roact context
+- [ ] Investigate moving from Attributes to Roact context or some other more Roact-like method. OR double-down on the Roblox-like attributes and define them all there, even if unset. I could potentially remove the "RoactFlexbox" scope too for Roblox-like style?
 
 ### Future
 - [ ] Support self-start, self-end, start, end, baseline, first baseline, etc

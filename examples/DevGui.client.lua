@@ -14,9 +14,9 @@ local root = Roact.createElement("ScreenGui", {
     ResetOnSpawn = false,
 }, {
     TestContainer = RoactFlexbox.createContainer("Frame", {
-        --Size = UDim2.new(0.8, 0, 0.8, 0),
+        Size = UDim2.new(0.8, 0, 0.8, 0),
         --Size = UDim2.new(0, 1170, 0, 476),
-        Size = UDim2.new(0, 0, 0, 0),
+        --Size = UDim2.new(0, 0, 0, 0),
         Position = UDim2.new(0.1, 0, 0.1, 0),
         --RowGap = UDim.new(0, 25),
         --ColumnGap = UDim.new(0, 25),

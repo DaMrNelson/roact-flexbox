@@ -135,10 +135,17 @@ return function(RoactFlexbox)
             local basis = item.Properties.FlexBasis
 
             if basis == PROPERTIES.AUTO then
+                -- Reset size for AbsoluteSize calc. We'll update this again anyways.
+                -- I am SO glad that this updates immediately!
+                item.Instance.Size = item.Properties.PropSize
+
+                -- No need to worry about item.Instance being null on off-axis recursion
+                -- as basis is never PROPERTIES.AUTO in those situations.
                 if majorIsX then
-                    basis = item.Properties.PropSize.X
+                    basis = UDim.new(0, item.Instance.AbsoluteSize.X)
                 else
-                    basis = item.Properties.PropSize.Y
+                    --basis = item.Properties.PropSize.Y
+                    basis = UDim.new(0, item.Instance.AbsoluteSize.Y)
                 end
             end
 
@@ -212,10 +219,14 @@ return function(RoactFlexbox)
                     local basis = item.Properties.FlexAltBasis
 
                     if basis == PROPERTIES.AUTO then
+                        -- Reset size for AbsoluteSize calc. We'll update this again anyways.
+                        -- I am SO glad that this updates immediately!
+                        item.Instance.Size = item.Properties.PropSize
+
                         if not majorIsX then -- We flip this now
-                            basis = item.Properties.PropSize.X
+                            basis = UDim.new(0, item.Instance.AbsoluteSize.X)
                         else
-                            basis = item.Properties.PropSize.Y
+                            basis = UDim.new(0, item.Instance.AbsoluteSize.Y)
                         end
                     end
 
@@ -239,6 +250,7 @@ return function(RoactFlexbox)
             for i, line in ipairs(lines) do
                 table.insert(linesFlexible, {
                     Instance = line,
+                    -- No need to set AbsoluteSize because Properties.FlexBasis is set
                     Properties = {
                         Order = i,
                         FlexGrow = containerProps.AlignContent == PROPERTIES.STRETCH and 1 or 0,
@@ -361,7 +373,7 @@ return function(RoactFlexbox)
         local props = {}
 
         for _, prop in ipairs(propList) do
-            props[prop] = FlexItem._getAttribute(obj, prop)
+            props[prop] = FlexItem:_getAttribute(obj, prop)
         end
 
         return props

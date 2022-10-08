@@ -21,7 +21,8 @@ local root = Roact.createElement("ScreenGui", {
         --JustifyContent = "space-around"
         JustifyContent = "center",
         --AlignContent = "space-evenly",
-        AlignContent = "stretch",
+        --AlignContent = "stretch",
+        AlignContent = "space-between",
         AlignItems = "stretch",
         --AlignItems = "flex-start",
 
@@ -80,15 +81,27 @@ local root = Roact.createElement("ScreenGui", {
         }),]]
         TestElm1 = RoactFlexbox.createElement("Frame", {
             Order = 1,
-            FlexBasis = UDim.new(0.2, 0),
-            FlexAltBasis = UDim.new(0, 200),
+            --FlexBasis = UDim.new(0.2, 0),
+            Size = UDim2.new(0.2, 0, 0, 10),
+            AutomaticSize = Enum.AutomaticSize.XY,
+            --FlexAltBasis = UDim.new(0, 200),
             BackgroundColor3 = Color3.new(1, 0, 0),
             BorderSizePixel = 0,
+        }, {
+            TextLabel = Roact.createElement("TextLabel", {
+                AutomaticSize = Enum.AutomaticSize.XY,
+                Size = UDim2.new(0, 0, 0, 0),
+                Text = "This is my test field. It is going to get longer and longer and longer until it expands enough!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nVertically too!",
+                BackgroundTransparency = 0.5,
+            }),
         }),
         TestElm2 = RoactFlexbox.createElement("Frame", {
             Order = 2,
-            FlexBasis = UDim.new(0.2, 0),
-            FlexAltBasis = UDim.new(0, 100),
+            --FlexBasis = UDim.new(0.2, 0),
+            Size = UDim2.new(0.2, 0, 0.2, 0),
+            SizeConstraint = Enum.SizeConstraint.RelativeXX,
+            --FlexAltBasis = UDim.new(0, 100),
+            FlexShrink = 0,
             AlignSelf = "center",
             BackgroundColor3 = Color3.new(0, 0, 1),
             BorderSizePixel = 0,
@@ -158,7 +171,8 @@ local root = Roact.createElement("ScreenGui", {
             Order = 5,
             FlexBasis = UDim.new(0.9, 0),
             --FlexAltBasis = UDim.new(0.8, 0),
-            FlexAltBasis = UDim.new(0, 100),
+            --FlexAltBasis = UDim.new(0, 100),
+            FlexAltBasis = UDim.new(0, 5),
             FlexGrow = 0,
             BackgroundColor3 = Color3.new(0, 1, 1),
             BorderSizePixel = 0,

@@ -20,8 +20,6 @@ return function(RoactFlexbox)
 
         -- Size change listener
         renderedProps[Roact.Change.AbsoluteSize] = function(...)
-            self:containerUpdate()
-
             -- Re-invoke existing change listener
             for propName, prop in pairs(self.props) do
                 -- Hacky, but imo its more reliable than trying to blindly compare `.name` or importing private components of Roact
@@ -29,6 +27,23 @@ return function(RoactFlexbox)
                     prop(...)
                 end
             end
+
+            -- Defer our update until the end of this cycle.
+            -- This updates on the same cycle (before the next render), its just put at the end of the queue!
+            -- I love the new task scheduler!
+            --
+            -- Anyways, this fixes an issue where statically sized containers do layout correctly.
+            -- This is because AbsoluteSize is called as this component is initialized by Roact, which
+            -- is BEFORE the FlexItem that wrap's this has didMount invoked. As such this object's
+            -- frame has no properties set yet!
+            --
+            -- TODO: Alternatively, consider just using self.props. This is so overkill.
+            -- I'd rather fit that into the update that no longer uses attributes tho, if that ever happens.
+            --
+            -- SEE ALSO: CTRL+F "Defer container update"
+            task.defer(function()
+                self:containerUpdate()
+            end)
         end
 
         -- TODO: Does this update when children are added??
@@ -49,11 +64,17 @@ return function(RoactFlexbox)
     -- Ie will children update themselves? Is there a cleaner way to make them update?
 
     function FlexContainer:didMount()
-        self:containerUpdate()
+        -- SEE ALSO: CTRL+F "Defer container update"
+        task.defer(function()
+            self:containerUpdate()
+        end)
     end
 
     function FlexContainer:didUpdate()
-        self:containerUpdate()
+        -- SEE ALSO: CTRL+F "Defer container update"
+        task.defer(function()
+            self:containerUpdate()
+        end)
     end
 
     function FlexContainer:containerUpdate()
@@ -64,7 +85,11 @@ return function(RoactFlexbox)
             return
         end
 
-        local states = self:_flexDisplay(self:_getProps(selfObj, Const.PRIVATE.FLEX_CONTAINER_PROPS), selfObj.AbsoluteSize, self:_getChildrenAndProps(children, Const.PRIVATE.FLEX_ITEM_PROPS))
+        local states = self:_flexDisplay(
+            self:_getProps(selfObj, Const.PRIVATE.FLEX_CONTAINER_PROPS),
+            selfObj.AbsoluteSize,
+            self:_getChildrenAndProps(children, Const.PRIVATE.FLEX_ITEM_PROPS)
+        )
 
         for _, state in ipairs(states) do
             state.Instance.Position = UDim2.new(0, state.X, 0, state.Y)

@@ -21,10 +21,11 @@ TODO: Link to docs + give a short example
 - [X] Support for shorthand properties: Flex, FlexFlow, and Gap
 - [X] Update pixel math to fill to actual outer edge
 - [X] Allow for non-flex children within the flexbox
-- [ ] Optimize when renders are performed (I placed a whole bunch to start for testing's sake)
+- [X] Optimize when renders are performed (I placed a whole bunch to start for testing's sake) - not much to do
 - [X] Scope attributes to "RoactFlexbox" namespace (ie RoactFlexbox.IsFlexItem)
 - [X] Support for AutomaticSize
 - [X] Respect SizeConstraint for basis = "auto"
+- [X] Fix static sized render issue
 - [ ] Investigate whether or not changes are needed based on BorderMode
 - [ ] Create documentation (github.io)
 - [ ] Pretty up the README (cool GitHub button things, short gif of the plugin in action, code example)
@@ -37,8 +38,11 @@ TODO: Link to docs + give a short example
 - [ ] Create as a model on Roblox
 - [ ] Post to DevForum
 
-### Descoped
-- [ ] Support self-start, self-end, start, end, baseline, first baseline, etc
-    - Not a priority for RC1.
+### RC2
 - [ ] Support for SizeConstraint for internal properties like FlexBasis (_scaleToPx)
     - Not a priority for RC1. Can be in RC2.
+- [ ] Investigate moving from Attributes to Roact context
+
+### Future
+- [ ] Support self-start, self-end, start, end, baseline, first baseline, etc
+    - Not a priority for RC1.
